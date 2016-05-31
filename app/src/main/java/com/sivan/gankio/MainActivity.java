@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.sivan.gankio.bean.ItemData;
+import com.sivan.gankio.bean.GankItemData;
 import com.sivan.gankio.http.HttpMethods;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        HttpMethods.getInstance().getClassification("Android", 10, 1)
-                .subscribe(new Subscriber<List<ItemData>>() {
+        HttpMethods.getInstance().getClfData("Android", 10, 1)
+                .subscribe(new Subscriber<List<GankItemData>>() {
                     @Override
                     public void onCompleted() {
 
@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(List<ItemData> itemDatas) {
-                        Log.d(TAG, itemDatas.toString());
+                    public void onNext(List<GankItemData> gankItemDatas) {
+                        Log.d(TAG, gankItemDatas.toString());
                     }
                 });
     }

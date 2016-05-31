@@ -1,9 +1,11 @@
 package com.sivan.gankio.bean;
 
+import java.util.Date;
+
 /**
  * Created by lixinwei on 16/5/30.
  */
-public class ItemData {
+public class GankItemData {
     /**
      * _id : 574b8a33421aa910a742e740
      * createdAt : 2016-05-30T08:32:51.878Z
@@ -17,9 +19,9 @@ public class ItemData {
      */
 
     private String _id;
-    private String createdAt;
+    private Date createdAt;
     private String desc;
-    private String publishedAt;
+    private Date publishedAt;
     private String source;
     private String type;
     private String url;
@@ -34,11 +36,11 @@ public class ItemData {
         this._id = _id;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -50,11 +52,11 @@ public class ItemData {
         this.desc = desc;
     }
 
-    public String getPublishedAt() {
+    public Date getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(String publishedAt) {
+    public void setPublishedAt(Date publishedAt) {
         this.publishedAt = publishedAt;
     }
 

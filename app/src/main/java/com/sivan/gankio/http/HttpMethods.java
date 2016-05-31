@@ -2,8 +2,9 @@ package com.sivan.gankio.http;
 
 import android.util.Log;
 
-import com.sivan.gankio.bean.BaseResult;
-import com.sivan.gankio.bean.ItemData;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sivan.gankio.bean.GankItemData;
 import com.sivan.gankio.common.Constant;
 
 import java.util.List;
@@ -15,7 +16,6 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -37,9 +37,10 @@ public class HttpMethods {
                     }
                 }).setLevel(HttpLoggingInterceptor.Level.BODY));
 
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").serializeNulls().create();
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(builder.build())
                 .build();
@@ -58,15 +59,10 @@ public class HttpMethods {
         return INSTANCE;
     }
 
-    public Observable<List<ItemData>> getClassification(String type, int count, int page) {
-        return mGankService.getClassificationData(type, count, page)
+    public Observable<List<GankItemData>> getClfData(String type, int count, int page) {
+        return mGankService.getClfData(type, count, page)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .map(new Func1<BaseResult<List<ItemData>>, List<ItemData>>() {
-                    @Override
-                    public List<ItemData> call(BaseResult<List<ItemData>> listBaseResult) {
-                        return listBaseResult.getT();
-                    }
-                });
+                .map(new HttpResultFunc<List<GankItemData>>());
     }
 }
