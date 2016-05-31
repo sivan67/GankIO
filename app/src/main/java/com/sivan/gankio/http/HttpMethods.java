@@ -5,7 +5,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sivan.gankio.bean.GankItemData;
+import com.sivan.gankio.bean.HttpResult;
 import com.sivan.gankio.common.Constant;
+import com.sivan.gankio.util.L;
+import com.sivan.gankio.util.RxUtil;
 
 import java.util.List;
 
@@ -15,8 +18,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by lixinwei on 16/5/30.
@@ -33,7 +34,11 @@ public class HttpMethods {
                 .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                     @Override
                     public void log(String message) {
-                        Log.d(TAG, message);
+                        if (message.startsWith("{") || message.startsWith("[")) {
+                            L.j(message);
+                        } else{
+                            Log.d(TAG, message);
+                        }
                     }
                 }).setLevel(HttpLoggingInterceptor.Level.BODY));
 
@@ -61,8 +66,11 @@ public class HttpMethods {
 
     public Observable<List<GankItemData>> getClfData(String type, int count, int page) {
         return mGankService.getClfData(type, count, page)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+                .compose(RxUtil.<HttpResult<List<GankItemData>>>rxSchedulerHelper())
+
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .compose(RxUtil.<List<GankItemData>>handleResult())
                 .map(new HttpResultFunc<List<GankItemData>>());
     }
 }
